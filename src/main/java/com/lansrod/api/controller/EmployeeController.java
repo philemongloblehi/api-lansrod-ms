@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lansrod.api.entity.Company;
 import com.lansrod.api.entity.Employee;
 import com.lansrod.api.helpers.utils.PageResponseFactory;
+import com.lansrod.api.helpers.utils.TypeOfContract;
 import com.lansrod.api.service.EmployeeService;
 import com.lansrod.api.validation.Create;
 import org.json.JSONException;
@@ -78,6 +79,18 @@ public class EmployeeController {
             this.employeeService.deleteEmployee(id);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "The request cannot be processed in the current state, check that the resource with the identifier \"" + id + "\" is not linked to any other resources.");
+        }
+    }
+
+    private static void verifyTypeOfContract(Enum<TypeOfContract> typeOfContractActual, Enum<TypeOfContract> newTypeOfContract) {
+        if (TypeOfContract.CDD == typeOfContractActual && TypeOfContract.ALTERNATION == newTypeOfContract || TypeOfContract.CDI == typeOfContractActual && TypeOfContract.ALTERNATION == newTypeOfContract) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee type of contract \"" + newTypeOfContract + "\" is not valid.");
+        }
+    }
+
+    private static void verifySalary(Double salary) {
+        if (0 >= salary) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee salary \"" + salary + "\" is not valid.");
         }
     }
 }
