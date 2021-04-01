@@ -4,6 +4,8 @@ import com.lansrod.api.entity.Employee;
 import com.lansrod.api.repository.EmployeeRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,8 +23,8 @@ public class EmployeeService {
         return employeeRepository.findById(id);
     }
 
-    public Iterable<Employee> getEmployees() {
-        return employeeRepository.findAll();
+    public Page<Employee> getEmployees(Pageable pageable) {
+        return employeeRepository.findAll(pageable);
     }
 
     public void deleteEmployee(final Long id) {
