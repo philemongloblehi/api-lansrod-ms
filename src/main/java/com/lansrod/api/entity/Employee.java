@@ -12,6 +12,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
@@ -58,6 +59,7 @@ public class Employee implements Serializable {
     private TypeOfContract typeOfContract;
 
     @Column(name="salary")
+    @Min(value = 1)
     @JsonView(SerializationGroup.Summary.class)
     private double salary;
 
