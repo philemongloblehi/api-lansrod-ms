@@ -1,10 +1,22 @@
 package com.lansrod.api.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lansrod.api.entity.Company;
 import com.lansrod.api.entity.Employee;
+import com.lansrod.api.helpers.utils.PageResponseFactory;
 import com.lansrod.api.service.EmployeeService;
+import com.lansrod.api.validation.Create;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -12,32 +24,60 @@ import java.util.Optional;
  * @author Philemon Globlehi <philemon.globlehi@gmail.com>
  */
 @RestController
+@RequestMapping(name = "api_employees_", path = "/api/v1/rest/employees", produces = MediaType.APPLICATION_JSON_VALUE)
 public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
 
-    @GetMapping(value = "/employees")
-    public Iterable<Employee> list() {
-        return this.employeeService.getEmployees();
+    @GetMapping(name = "list")
+    @ResponseStatus(HttpStatus.OK)
+    public String list(@PageableDefault Pageable pageable) throws JSONException, JsonProcessingException {
+        Page<Employee> employees = this.employeeService.getEmployees(pageable);
+        return PageResponseFactory.createResponseJsonBody(employees).toString();
     }
 
-    @GetMapping(value = "/employees/{id}")
+    @GetMapping(value = "/{id}", name = "read")
+    @ResponseStatus(HttpStatus.OK)
     public Optional<Employee> read(@PathVariable Long id) {
-        return this.employeeService.getEmployee(id);
+        Optional<Employee> employee = this.employeeService.getEmployee(id);
+        if (!employee.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee with id \"" + id + "\" is not found.");
+        }
+
+        return employee;
     }
 
-    @PostMapping(value = "/employees")
-    public Employee add(@RequestBody Employee company) {
-        return this.employeeService.saveEmployee(company);
+    @PostMapping(name = "create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Employee> add(@RequestBody @Validated(Create.class) Employee employee) {
+        this.employeeService.saveEmployee(employee);
+        return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/companies/{id}")
-    public Employee add(@RequestBody Employee company, @PathVariable Long id) {
-        return this.employeeService.saveEmployee(company);
+    @PutMapping(value = "/{id}", name = "update")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Employee> update(@RequestBody Employee employee, @PathVariable Long id) {
+        Optional<Employee> response = this.employeeService.getEmployee(id);
+        if (!response.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee with id \"" + id + "\" is not found.");
+        }
+
+        this.employeeService.saveEmployee(employee);
+        return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
-    @DeleteMapping (value = "/employees/{id}")
+    @DeleteMapping (value = "/{id}", name = "delete")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remove(@PathVariable Long id) {
-        this.employeeService.deleteEmployee(id);
+        Optional<Employee> employee = this.employeeService.getEmployee(id);
+        if (!employee.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee with id \"" + id + "\" is not found.");
+        }
+
+        try {
+            this.employeeService.deleteEmployee(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "The request cannot be processed in the current state, check that the resource with the identifier \"" + id + "\" is not linked to any other resources.");
+        }
     }
 }
