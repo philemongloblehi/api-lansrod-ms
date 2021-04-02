@@ -4,7 +4,7 @@ services:
     #service 1: definition of mysql database
     db:
       image: mysql:latest
-      container_name: mysql-db2   
+      container_name: mysql
       environment:
         - MYSQL_ROOT_PASSWORD=root
         - MYSQL_USER=
@@ -13,6 +13,9 @@ services:
       restart: always
       volumes:
         - db-data:/var/lib/mysql
+      networks:
+        - dev
+
 
 
 
@@ -29,10 +32,12 @@ services:
       environment:
         SPRING_DATASOURCE_USERNAME: root
         SPRING_DATASOURCE_PASSWORD:
-    
-    
-    
-    #service 3: definition of your spring-boot app 
+      networks:
+        - dev
+
+
+
+  #service 3: definition of your spring-boot app
     lansrodservice:
       image: lansrod
       container_name: lansrod-app
@@ -46,9 +51,11 @@ services:
       depends_on:
         - db
       environment:
-        SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db2:3306/lansrod_db?createDatabaseIfNotExist=true
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/lansrod_db?createDatabaseIfNotExist=true
         SPRING_DATASOURCE_USERNAME: root
         SPRING_DATASOURCE_PASSWORD:
+      networks:
+        - dev
 
 networks:
     dev:
