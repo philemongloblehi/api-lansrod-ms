@@ -28,7 +28,7 @@ Run these commands one by one into cmd/terminal/shell.
 This is the basic version with standard features.
 Base URL => localhost:8084/api/v1/rest/
 
-[Version 2]()
+[Version 2](https://github.com/philemongloblehi/api-lansrod-ms/releases/tag/2.0)
 This is the basic version with standard features and authentication with Json Web Token (JWT).
 Base URL => localhost:8084/api/v2/rest/
 
