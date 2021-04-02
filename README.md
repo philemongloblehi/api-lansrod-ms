@@ -29,7 +29,7 @@ This is the basic version with standard features.
 Base URL => localhost:8084/api/v1/rest/
 
 [Version 2]()
-This is the basic version with standard features and authentication with Json Web Token (JWT)
+This is the basic version with standard features and authentication with Json Web Token (JWT).
 Base URL => localhost:8084/api/v2/rest/
 
 
