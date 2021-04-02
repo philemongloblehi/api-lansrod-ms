@@ -52,7 +52,7 @@ public class CompanyControllerTest {
     public void testThatCanCreateCompanies() throws Exception {
         MvcResult result = this.mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/api/v1/rest/companies")
+                        .post("/api/v2/rest/companies")
                         .content("{"
                                 + 	"\"socialReason\": \"Lansrod\","
                                 + 	"\"siren\": \"SIREN-001\","
@@ -79,7 +79,7 @@ public class CompanyControllerTest {
     public void testThatCanReadCompanies() throws Exception {
         this.mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/api/v1/rest/companies/" + json.getInt("id"))
+                        .get("/api/v2/rest/companies/" + json.getInt("id"))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -96,7 +96,7 @@ public class CompanyControllerTest {
     public void testThatCanListCompanies() throws Exception {
         this.mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/api/v1/rest/companies")
+                        .get("/api/v2/rest/companies")
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -119,7 +119,7 @@ public class CompanyControllerTest {
     public void testThatCanUpdateCompanies() throws Exception {
         this.mvc.perform(
                 MockMvcRequestBuilders
-                        .patch("/api/v1/rest/companies/" + json.getInt("id"))
+                        .patch("/api/v2/rest/companies/" + json.getInt("id"))
                         .content("{"
                                 + 	"\"socialReason\": \"Lansrod\","
                                 + 	"\"siren\": \"SIREN-001\","
@@ -143,7 +143,7 @@ public class CompanyControllerTest {
     public void testThatCanDeleteCompanies() throws Exception {
         this.mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/api/v1/rest/companies/" + json.getInt("id"))
+                        .delete("/api/v2/rest/companies/" + json.getInt("id"))
         )
                 .andExpect(status().isNoContent());
     }

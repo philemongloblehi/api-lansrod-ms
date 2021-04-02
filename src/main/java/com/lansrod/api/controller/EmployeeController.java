@@ -28,7 +28,7 @@ import java.util.Optional;
  * @author Philemon Globlehi <philemon.globlehi@gmail.com>
  */
 @RestController
-@RequestMapping(name = "api_employees_", path = "/api/v1/rest/employees", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(name = "api_employees_", path = "/api/v2/rest/employees", produces = MediaType.APPLICATION_JSON_VALUE)
 public class EmployeeController {
     @Autowired
     EmployeeService employeeService;

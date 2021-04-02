@@ -52,7 +52,7 @@ public class EmployeeControllerTest {
     public void testThatCanCreateEmployees() throws Exception {
         MvcResult result = this.mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/api/v1/rest/employees")
+                        .post("/api/v2/rest/employees")
                         .content("{"
                                 + 	"\"lastName\": \"Philemon\","
                                 + 	"\"firstName\": \"Globlehi\","
@@ -83,7 +83,7 @@ public class EmployeeControllerTest {
     public void testThatCanReadEmployees() throws Exception {
         this.mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/api/v1/rest/employees/" + json.getInt("id"))
+                        .get("/api/v2/rest/employees/" + json.getInt("id"))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -102,7 +102,7 @@ public class EmployeeControllerTest {
     public void testThatCanListEmployees() throws Exception {
         this.mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/api/v1/rest/employees")
+                        .get("/api/v2/rest/employees")
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -127,7 +127,7 @@ public class EmployeeControllerTest {
     public void testThatCanUpdateEmployees() throws Exception {
         this.mvc.perform(
                 MockMvcRequestBuilders
-                        .patch("/api/v1/rest/employees/" + json.getInt("id"))
+                        .patch("/api/v2/rest/employees/" + json.getInt("id"))
                         .content("{"
                                 + 	"\"lastName\": \"Philemon\","
                                 + 	"\"firstName\": \"Globlehi\","
@@ -155,7 +155,7 @@ public class EmployeeControllerTest {
     public void testThatCanDeleteEmployees() throws Exception {
         this.mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/api/v1/rest/employees/" + json.getInt("id"))
+                        .delete("/api/v2/rest/employees/" + json.getInt("id"))
         )
                 .andExpect(status().isNoContent());
     }
