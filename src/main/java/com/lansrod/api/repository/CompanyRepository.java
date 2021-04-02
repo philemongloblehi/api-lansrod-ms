@@ -10,6 +10,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CompanyRepository extends PagingAndSortingRepository<Company, Long> {
-    public boolean findCompanyBySiren(String siren);
-    public boolean findCompanyBySiret(String siret);
+
 }
