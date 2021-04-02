@@ -65,7 +65,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeSaved, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", name = "update")
+    @RequestMapping(path = "/{id}", name = "update", method = {RequestMethod.PUT, RequestMethod.PATCH})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<Employee> update(@Valid @RequestBody Employee employee, @PathVariable Long id) {

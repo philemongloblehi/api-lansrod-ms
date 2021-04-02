@@ -63,7 +63,7 @@ public class CompanyController {
         return new ResponseEntity<>(companySaved, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", name = "update")
+    @RequestMapping(path = "/{id}", name = "update", method = {RequestMethod.PUT, RequestMethod.PATCH})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<Company> update(@Valid @RequestBody Company company, @PathVariable Long id) {
