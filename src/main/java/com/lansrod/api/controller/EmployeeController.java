@@ -59,16 +59,16 @@ public class EmployeeController {
     @PostMapping(name = "create")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<Employee> add(@RequestBody @Valid Employee employee) {
+    public ResponseEntity<Employee> add(@Valid @RequestBody Employee employee) {
         verifySalary(employee.getSalary());
-        this.employeeService.saveEmployee(employee);
-        return new ResponseEntity<>(employee, HttpStatus.CREATED);
+        Employee employeeSaved = this.employeeService.saveEmployee(employee);
+        return new ResponseEntity<>(employeeSaved, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", name = "update")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<Employee> update(@RequestBody @Valid Employee employee, @PathVariable Long id) {
+    public ResponseEntity<Employee> update(@Valid @RequestBody Employee employee, @PathVariable Long id) {
         Optional<Employee> employeeObj = this.employeeService.getEmployee(id);
         if (!employeeObj.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee with id \"" + id + "\" is not found.");
@@ -76,8 +76,8 @@ public class EmployeeController {
 
         verifySalary(employee.getSalary());
         verifyTypeOfContract(employeeObj.get().getTypeOfContract(), employee.getTypeOfContract());
-        this.employeeService.saveEmployee(employee);
-        return new ResponseEntity<>(employee, HttpStatus.OK);
+        Employee employeeUpdated = this.employeeService.saveEmployee(employee);
+        return new ResponseEntity<>(employeeUpdated, HttpStatus.OK);
     }
 
     @DeleteMapping (value = "/{id}", name = "delete")
