@@ -18,10 +18,20 @@ Run these commands one by one into cmd/terminal/shell.
 | SL 	| Endpoint                                    	| Request Type 	| Data Format in Request Body                                                                                                                                                                                                                        	|
 |----	|---------------------------------------------	|--------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
 | 1  	| localhost:8084/api/v1/rest/companies         	| POST         	|  ``` {"socialReason": "Lansrod", "siren": "0000000", "siret": "0000000", "address": "Paris, France"} ```                                              	|
-| 2  	| localhost:8084/api/v1/rest/empees         	| POST         	|  ``` {"lastName": "Philemon", "firstName": "Globlehi", "socialSecurityNumber": "0000000", "hiringDate": "2021-04-02", "typeOfContract": "CDI", "salary": 6000} ```                                              	|
+| 2  	| localhost:8084/api/v1/rest/employees         	| POST         	|  ``` {"lastName": "Philemon", "firstName": "Globlehi", "socialSecurityNumber": "0000000", "hiringDate": "2021-04-02", "typeOfContract": "CDI", "salary": 6000} ```                                              	|
 | 3  	| localhost:8084/api/v1/rest/companies         	| GET          	| ``` X ```                                                                                                                                                                                                                                          	|
 
 * And some more endpoints are there, explore these endpoints from `controller` classes.
+
+## Version API Description
+[Version 1]()
+This is the basic version with standard features.
+Base URL => localhost:8084/api/v1/rest/
+
+[Version 2]()
+This is the basic version with standard features and authentication with Json Web Token (JWT)
+Base URL => localhost:8084/api/v2/rest/
+
 
 ## Short Description
 The goal of this API is to develop a spring boot application that exposes the following webs:
