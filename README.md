@@ -24,7 +24,7 @@ Run these commands one by one into cmd/terminal/shell.
 * And some more endpoints are there, explore these endpoints from `controller` classes.
 
 ## Version API Description
-[Version 1]()
+[Version 1](https://github.com/philemongloblehi/api-lansrod-ms/releases/tag/1.0)
 This is the basic version with standard features.
 Base URL => localhost:8084/api/v1/rest/
 
