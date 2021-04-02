@@ -5,8 +5,8 @@ import com.lansrod.api.entity.Company;
 import com.lansrod.api.entity.Employee;
 import com.lansrod.api.helpers.utils.PageResponseFactory;
 import com.lansrod.api.helpers.utils.TypeOfContract;
+import com.lansrod.api.service.CompanyService;
 import com.lansrod.api.service.EmployeeService;
-import com.lansrod.api.validation.Create;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,8 +17,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -30,8 +33,12 @@ public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
 
+    @Autowired
+    CompanyService companyService;
+
     @GetMapping(name = "list")
     @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     public String list(@PageableDefault Pageable pageable) throws JSONException, JsonProcessingException {
         Page<Employee> employees = this.employeeService.getEmployees(pageable);
         return PageResponseFactory.createResponseJsonBody(employees).toString();
@@ -39,6 +46,7 @@ public class EmployeeController {
 
     @GetMapping(value = "/{id}", name = "read")
     @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     public Optional<Employee> read(@PathVariable Long id) {
         Optional<Employee> employee = this.employeeService.getEmployee(id);
         if (!employee.isPresent()) {
@@ -50,19 +58,24 @@ public class EmployeeController {
 
     @PostMapping(name = "create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Employee> add(@RequestBody @Validated(Create.class) Employee employee) {
+    @ResponseBody
+    public ResponseEntity<Employee> add(@RequestBody @Valid Employee employee) {
+        verifySalary(employee.getSalary());
         this.employeeService.saveEmployee(employee);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", name = "update")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Employee> update(@RequestBody Employee employee, @PathVariable Long id) {
-        Optional<Employee> response = this.employeeService.getEmployee(id);
-        if (!response.isPresent()) {
+    @ResponseBody
+    public ResponseEntity<Employee> update(@RequestBody @Valid Employee employee, @PathVariable Long id) {
+        Optional<Employee> employeeObj = this.employeeService.getEmployee(id);
+        if (!employeeObj.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee with id \"" + id + "\" is not found.");
         }
 
+        verifySalary(employee.getSalary());
+        verifyTypeOfContract(employeeObj.get().getTypeOfContract(), employee.getTypeOfContract());
         this.employeeService.saveEmployee(employee);
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
@@ -77,9 +90,21 @@ public class EmployeeController {
 
         try {
             this.employeeService.deleteEmployee(id);
-        } catch (Exception e) {
+        } catch (HttpClientErrorException.Conflict ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "The request cannot be processed in the current state, check that the resource with the identifier \"" + id + "\" is not linked to any other resources.");
         }
+    }
+
+    @GetMapping(value = "/companyId/{companyId}/hiringDate/{hiringDate}/typeOfContract/{typeOfContract}/salary/{salary}", name = "list_by_criteria")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Iterable<Employee> listByCriteria(@PathVariable Long companyId, @PathVariable Date hiringDate, @PathVariable Enum<TypeOfContract> typeOfContract, @PathVariable double salary) {
+        Optional<Company> company = this.companyService.getCompany(companyId);
+        if (!company.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company with id \"" + companyId + "\" is not found.");
+        }
+
+        return this.employeeService.getEmployeesByCriteria(company, hiringDate, typeOfContract, salary);
     }
 
     private static void verifyTypeOfContract(Enum<TypeOfContract> typeOfContractActual, Enum<TypeOfContract> newTypeOfContract) {
