@@ -58,22 +58,22 @@ public class CompanyController {
     @PostMapping(name = "create")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<Company> add(@RequestBody @Valid Company company) {
-        this.companyService.saveCompany(company);
-        return new ResponseEntity<>(company, HttpStatus.CREATED);
+    public ResponseEntity<Company> add(@Valid @RequestBody Company company) {
+        Company companySaved = this.companyService.saveCompany(company);
+        return new ResponseEntity<>(companySaved, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", name = "update")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<Company> update(@RequestBody @Valid Company company, @PathVariable Long id) {
+    public ResponseEntity<Company> update(@Valid @RequestBody Company company, @PathVariable Long id) {
         Optional<Company> companyObj = this.companyService.getCompany(id);
         if (!companyObj.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company with id \"" + id + "\" is not found.");
         }
 
-        this.companyService.saveCompany(company);
-        return new ResponseEntity<>(company, HttpStatus.OK);
+        Company companyUpdated = this.companyService.saveCompany(company);
+        return new ResponseEntity<>(companyUpdated, HttpStatus.OK);
     }
 
     @DeleteMapping (value = "/{id}", name = "delete")
