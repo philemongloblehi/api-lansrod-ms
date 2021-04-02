@@ -2,14 +2,11 @@ package com.lansrod.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.lansrod.api.serialization.SerializationGroup;
-import com.lansrod.api.validation.Create;
-import com.lansrod.api.validation.UniqueSiren;
-import com.lansrod.api.validation.UniqueSiret;
-import com.lansrod.api.validation.Update;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -25,25 +22,26 @@ public class Company implements Serializable {
     private Long id;
 
     @Column(name="social_reason")
-    @NotBlank( groups = {Create.class})
-    @Length(min = 5, max = 100, groups = {Create.class})
+    @NotBlank(message = "socialReason must be not blank")
+    @NotNull(message = "socialReason must be not null")
+    @Length(min = 5, max = 100, message = "lastName too long or too short.")
     @JsonView(SerializationGroup.Summary.class)
     private String socialReason;
 
     @Column(name="siren")
-    @UniqueSiren(groups = {Create.class, Update.class})
-    @NotBlank( groups = {Create.class})
+    @NotBlank(message = "siren must be not blank")
+    @NotNull(message = "siren must be not null")
     @JsonView(SerializationGroup.Summary.class)
     private String siren;
 
     @Column(name="siret")
-    @UniqueSiret(groups = {Create.class, Update.class})
-    @NotBlank( groups = {Create.class})
+    @NotBlank(message = "siret must be not blank")
+    @NotNull(message = "siret must be not null")
     @JsonView(SerializationGroup.Summary.class)
     private String siret;
 
     @Column(name="address")
-    @Length(min = 5, max = 100, groups = {Create.class})
+    @Length(min = 5, max = 100, message = "lastName too long or too short.")
     @JsonView(SerializationGroup.Summary.class)
     private String address;
 
